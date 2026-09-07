@@ -1,0 +1,8 @@
+.venv/
+.venv311/
+__pycache__/
+*.pyc
+*.log
+*.part
+.ipynb_checkpoints/
+.streamlit/

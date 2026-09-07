@@ -1,0 +1,11 @@
+2026-09-08 00:27:35.856680: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-09-08 00:27:40.455799: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING:tensorflow:From C:\New folder (3)\pneumonia-detection-main\pneumonia-detection-main\.venv311\Lib\site-packages\keras\src\backend\common\global_state.py:82: The name tf.reset_default_graph is deprecated. Please use tf.compat.v1.reset_default_graph instead.
+
+2026-09-08 00:33:13.762531: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1788808745.510243   10788 service.cc:145] XLA service 0x2146780c6f0 initialized for platform Host (this does not guarantee that XLA will be used). Devices:
+I0000 00:00:1788808745.512389   10788 service.cc:153]   StreamExecutor device (0): Host, Default Version
+2026-09-08 00:49:05.716646: I tensorflow/compiler/mlir/tensorflow/utils/dump_mlir_util.cc:268] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
+I0000 00:00:1788808748.549853   10788 device_compiler.h:188] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
