@@ -1,0 +1,89 @@
+{
+  "batch_size": 32,
+  "compile": {
+    "learning_rate": 0.0001,
+    "loss": "binary_crossentropy",
+    "metrics": [
+      "accuracy"
+    ],
+    "optimizer": "Adam"
+  },
+  "early_stopping_patience": 3,
+  "environment": {
+    "h5py": "3.16.0",
+    "keras": "3.15.1",
+    "numpy": "1.26.4",
+    "python": "3.11.9",
+    "tensorflow": "2.16.2"
+  },
+  "epochs_max": 10,
+  "expected_parameter_count": 6646529,
+  "model_architecture": [
+    "Conv2D(32, 3x3, relu)",
+    "MaxPooling2D(2x2)",
+    "Conv2D(64, 3x3, relu)",
+    "MaxPooling2D(2x2)",
+    "Conv2D(128, 3x3, relu)",
+    "MaxPooling2D(2x2)",
+    "Flatten",
+    "Dense(128, relu)",
+    "Dropout(0.5)",
+    "Dense(1, sigmoid)"
+  ],
+  "model_input_shape": [
+    null,
+    180,
+    180,
+    1
+  ],
+  "model_output_shape": [
+    null,
+    1
+  ],
+  "original_checkpoint_path": "C:\\Users\\Lenovo\\Desktop\\pneumonia-detection-main\\pneumonia_detection_model.keras",
+  "original_checkpoint_sha256": "494e795aad06ca484c5e057141d8d1f76f8eb6e30333770f4e2f63f09e12fa8e",
+  "preflight_model": {
+    "compile": {
+      "learning_rate": 0.0001,
+      "loss": "binary_crossentropy",
+      "metrics": [
+        "accuracy"
+      ],
+      "optimizer": "Adam"
+    },
+    "input_shape": [
+      null,
+      180,
+      180,
+      1
+    ],
+    "output_shape": [
+      null,
+      1
+    ],
+    "parameter_count": 6646529
+  },
+  "seed": 42,
+  "threshold": 0.5,
+  "verified_model": {
+    "compile": {
+      "learning_rate": 0.0001,
+      "loss": "binary_crossentropy",
+      "metrics": [
+        "accuracy"
+      ],
+      "optimizer": "Adam"
+    },
+    "input_shape": [
+      null,
+      180,
+      180,
+      1
+    ],
+    "output_shape": [
+      null,
+      1
+    ],
+    "parameter_count": 6646529
+  }
+}

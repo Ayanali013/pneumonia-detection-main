@@ -1,0 +1,58 @@
+{
+  "accuracy": 0.9521640091116174,
+  "class_counts": {
+    "Normal": 237,
+    "Pneumonia": 641
+  },
+  "confusion_matrix": {
+    "columns": "predicted",
+    "label_order": [
+      "Normal",
+      "Pneumonia"
+    ],
+    "matrix": [
+      [
+        211,
+        26
+      ],
+      [
+        16,
+        625
+      ]
+    ],
+    "rows": "actual"
+  },
+  "confusion_matrix_counts": {
+    "false_negative": 16,
+    "false_positive": 26,
+    "true_negative": 211,
+    "true_positive": 625
+  },
+  "dataset_path": "C:\\Users\\Lenovo\\Desktop\\pneumonia-detection-main\\x_ray_full_dataset.h5",
+  "dataset_sha256": "296869742b183417e5dfc1e1fbd310a7092af40bca0884ba8363d9ca80babfc9",
+  "f1": 0.9674922600619195,
+  "independence_note": "This is an image-level, duplicate-group-aware holdout. Patient-level independence is not established.",
+  "metric_denominators": {
+    "accuracy": 878,
+    "f1": 1292,
+    "precision": 651,
+    "roc_auc_positive_negative_pairs": 151917,
+    "sensitivity_recall": 641,
+    "specificity": 237
+  },
+  "model_path": "C:\\Users\\Lenovo\\Desktop\\pneumonia-detection-main\\experiments\\fresh_cnn_20261111T191028Z_seed42_81670745\\best_model.keras",
+  "model_sha256": "87962499c021d815f8005ad2e192d4ef9d815e47e06eb4fe124d81829630a681",
+  "precision": 0.9600614439324117,
+  "roc_auc": 0.9874668404457697,
+  "sample_count": 878,
+  "seed": 42,
+  "sensitivity_recall": 0.9750390015600624,
+  "specificity": 0.890295358649789,
+  "split_manifest": "C:\\Users\\Lenovo\\Desktop\\pneumonia-detection-main\\experiments\\fresh_cnn_20261111T191028Z_seed42_81670745\\split_manifest.json",
+  "test_class_counts": {
+    "Normal": 237,
+    "Pneumonia": 641
+  },
+  "test_sample_count": 878,
+  "threshold": 0.5
+}
