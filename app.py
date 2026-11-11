@@ -5,12 +5,11 @@ import streamlit as st
 import tensorflow as tf
 from PIL import Image
 
+from image_preprocessing import MAX_UPLOAD_BYTES, prepare_image
 
 PROJECT_ROOT = Path(__file__).resolve().parent
 MODEL_PATHS = {
     "Custom CNN": PROJECT_ROOT / "pneumonia_detection_model.keras",
-    "ResNet-50 v1": PROJECT_ROOT / "v1_resnet50.keras",
-    "ResNet-50 v3": PROJECT_ROOT / "v3_resnet50.keras",
 }
 
 
@@ -51,15 +50,6 @@ def load_model(model_path: str):
     return tf.keras.models.load_model(model_path)
 
 
-def prepare_image(uploaded_file: st.runtime.uploaded_file_manager.UploadedFile, channels: int):
-    image = Image.open(uploaded_file).convert("L").resize((180, 180), Image.Resampling.LANCZOS)
-    array = np.asarray(image, dtype=np.float32) / 255.0
-    array = array[np.newaxis, ..., np.newaxis]
-    if channels == 3:
-        array = np.concatenate((array, array, array), axis=3)
-    return image, array
-
-
 with st.sidebar:
     st.markdown("## Review setup")
     selected_model = st.selectbox("Model", list(MODEL_PATHS), index=0)
@@ -83,36 +73,60 @@ st.markdown(
 left, right = st.columns([1.05, 0.95], gap="large")
 with left:
     st.markdown('<div class="panel"><h3>1. Upload image</h3>', unsafe_allow_html=True)
-    uploaded_file = st.file_uploader("Choose a chest X-ray", type=["jpg", "jpeg", "png"])
+    uploaded_file = st.file_uploader(
+        "Choose a chest X-ray",
+        type=["jpg", "jpeg", "png"],
+        help=f"JPEG or PNG, up to {MAX_UPLOAD_BYTES // (1024 * 1024)} MB.",
+    )
+    st.caption(f"Maximum file size: {MAX_UPLOAD_BYTES // (1024 * 1024)} MB.")
+    uploaded_image_data = None
+    model_input = None
     if uploaded_file:
-        preview = Image.open(uploaded_file).convert("L")
-        st.image(preview, caption=uploaded_file.name, use_column_width=True)
+        uploaded_image_data = uploaded_file.getvalue()
+        try:
+            preview, model_input = prepare_image(uploaded_image_data, channels=1)
+        except ValueError as exc:
+            st.error(str(exc))
+        else:
+            st.image(preview, caption=uploaded_file.name, use_column_width=True)
     else:
         st.info("Add a JPG or PNG chest X-ray to begin the review.")
     st.markdown('</div>', unsafe_allow_html=True)
 
 with right:
     st.markdown('<div class="panel"><h3>2. Model result</h3>', unsafe_allow_html=True)
-    if uploaded_file:
+    if uploaded_file and model_input is not None:
         if st.button("Run assessment", type="primary", use_container_width=True):
             model_path = MODEL_PATHS[selected_model]
             if not model_path.exists():
                 st.error(f"Model file not found: {model_path.name}")
             else:
                 with st.spinner("Reviewing image..."):
-                    model = load_model(str(model_path))
-                    _, model_input = prepare_image(uploaded_file, model.input_shape[-1])
-                    probability = float(model.predict(model_input, verbose=0)[0][0])
-                diagnosis = "Pneumonia pattern detected" if probability >= 0.5 else "No pneumonia pattern detected"
-                result_class = "result"
-                st.markdown(
-                    f'<div class="{result_class}"><h2>{diagnosis}</h2>'
-                    f'<p>Estimated pneumonia probability: <strong>{probability:.1%}</strong></p>'
-                    f'<p>Model: {selected_model}</p></div>',
-                    unsafe_allow_html=True,
-                )
-                st.progress(probability, text="Pneumonia probability")
-                st.caption("This estimate is not a diagnosis. Confirm findings with a qualified clinician.")
+                    try:
+                        model = load_model(str(model_path))
+                        if model.input_shape[-1] not in (1, 3):
+                            raise ValueError(f"Unsupported model input channels: {model.input_shape[-1]}")
+                        _, model_input = prepare_image(uploaded_image_data, model.input_shape[-1])
+                        prediction = model.predict(model_input, verbose=0)
+                        if prediction.shape != (1, 1):
+                            raise ValueError(f"Unexpected model output shape: {prediction.shape}")
+                        probability = float(prediction[0, 0])
+                        if not np.isfinite(probability) or not 0.0 <= probability <= 1.0:
+                            raise ValueError("The model returned an invalid probability.")
+                    except (OSError, ValueError, tf.errors.OpError) as exc:
+                        st.error(f"Assessment failed: {exc}")
+                    else:
+                        diagnosis = "Pneumonia pattern detected" if probability >= 0.5 else "No pneumonia pattern detected"
+                        st.markdown(
+                            f'<div class="result"><h2>{diagnosis}</h2>'
+                            f'<p>Estimated pneumonia probability: <strong>{probability:.1%}</strong></p>'
+                            f'<p>Model: {selected_model}</p></div>',
+                            unsafe_allow_html=True,
+                        )
+                        st.progress(probability, text="Pneumonia probability")
+                        st.caption("This estimate is not a diagnosis. Confirm findings with a qualified clinician.")
+    elif uploaded_file:
+        st.info("Upload a valid chest X-ray image to run the assessment.")
     else:
         st.info("The assessment result will appear here after an image is uploaded.")
     st.markdown('</div>', unsafe_allow_html=True)
